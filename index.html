@@ -70,20 +70,22 @@
 <body>
 
 <div class="container">
-    <div class="header">
-        <h1>☀️ Daily Planner</h1>
-        <div class="date-display">
-            <div id="currentDay" style="font-size: 20px;">Friday</div>
-            <div id="currentDate" style="font-size: 14px; color: var(--stv-blue);">March 6, 2026</div>
-        </div>
-        <div class="weather-selector" id="weather">
-            <span data-w="☀️">☀️</span>
-            <span data-w="🌤️">🌤️</span>
-            <span data-w="☁️">☁️</span>
-            <span data-w="🌧️">🌧️</span>
-            <span data-w="❄️">❄️</span>
+    <div class="header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid var(--stv-blue); padding-bottom: 15px; margin-bottom: 25px;">
+    <div style="display: flex; align-items: baseline; gap: 15px;">
+        <h1 style="margin: 0; color: var(--stv-blue); font-size: 32px; text-transform: uppercase; letter-spacing: 1px;">☀️ Daily Planner</h1>
+        <div class="date-display" style="display: flex; gap: 8px; font-weight: bold; align-items: baseline;">
+            <div id="currentDay" style="font-size: 20px; color: #333;">Friday</div>
+            <div id="currentDate" style="font-size: 16px; color: var(--stv-blue);">March 6, 2026</div>
         </div>
     </div>
+    <div class="weather-selector" id="weather">
+        <span data-w="☀️">☀️</span>
+        <span data-w="🌤️">🌤️</span>
+        <span data-w="☁️">☁️</span>
+        <span data-w="🌧️">🌧️</span>
+        <span data-w="❄️">❄️</span>
+    </div>
+</div>
 
     <div class="grid">
         <div class="box schedule-box">
@@ -198,4 +200,5 @@
 </script>
 </body>
 </html>
+
 
