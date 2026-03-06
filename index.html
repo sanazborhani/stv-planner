@@ -2,61 +2,222 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Sanaz's STV First Week Planner</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanaz's STV First Week | Technical Dashboard</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; color: #333; padding: 20px; }
-        .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        h1 { color: #005a8b; border-bottom: 2px solid #005a8b; padding-bottom: 10px; }
-        .routine { margin-bottom: 30px; }
-        .routine-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
-        .todo-section textarea { width: 100%; height: 150px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; }
-        .save-btn { background: #005a8b; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 10px; }
-        .save-btn:hover { background: #004a73; }
-        .status { color: green; font-size: 12px; margin-top: 5px; display: none; }
+        /* BASE STYLES */
+        :root {
+            --stv-blue: #005a8b; /* STV Corporate Blue */
+            --light-blue: #e8f4f9;
+            --green: #e9f7ef;
+            --yellow: #fef9e7;
+            --orange: #fdf2e9;
+            --gray: #f2f2f2;
+            --border-color: #ddd;
+        }
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f7f9fc;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* HEADER */
+        .header {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--stv-blue);
+            padding-bottom: 15px;
+            margin-bottom: 10px;
+        }
+        .header h1 { margin: 0; color: var(--stv-blue); font-weight: 700; font-size: 28px; }
+        .header-controls { display: flex; gap: 10px; align-items: center; }
+        .date { border: 1px solid var(--border-color); padding: 5px 15px; border-radius: 6px; }
+        .mood-selector span { cursor: pointer; font-size: 1.2rem; margin: 0 3px; opacity: 0.5; }
+        .mood-selector span.selected { opacity: 1; text-shadow: 0 0 5px rgba(0,0,0,0.2); }
+
+        /* COMMON BOX STYLES */
+        .box {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 15px;
+        }
+        .box h3 { margin: 0 0 12px 0; color: #555; font-weight: 600; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        /* THE 'SCHEDULE' AND 'TODO' COLUMNS */
+        .col-left { display: grid; grid-template-rows: auto auto auto; gap: 20px; }
+        .col-right { display: grid; grid-template-rows: auto auto auto auto; gap: 20px; }
+
+        /* SPECIFIC BOXES */
+        #schedule { background: white; grid-row: 1 / 4; }
+        #top-priorities { background: var(--orange); }
+        #to-do { background: var(--light-blue); }
+        #reminders { background: var(--green); }
+        #meetings { background: var(--orange); }
+        #notes { background: var(--gray); grid-column: 1 / 2; }
+        #gratitude { background: var(--yellow); grid-column: 2 / 3; }
+
+        /* INPUTS AND TEXTAREAS */
+        textarea, .priority-item {
+            width: 100%;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 6px;
+            padding: 10px;
+            font-family: inherit;
+            font-size: 14px;
+            resize: none;
+            box-sizing: border-box;
+            background: rgba(255,255,255,0.8);
+        }
+        textarea { height: 120px; margin-bottom: 10px; }
+        .boxtextarea { height: 100%; }
+
+        /* SCHEDULE & TODO INTERACTIVE ELEMENTS */
+        .schedule-entry, .todo-item {
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .time-label { font-size: 12px; color: #777; font-weight: bold; }
+        .todo-item { grid-template-columns: auto 1fr; gap: 10px; }
+        .input-schedule, .input-todo { border: none; background: transparent; padding: 0; font-family: inherit; font-size: 14px; }
+        .todo-item input[type="checkbox"] { transform: scale(1.1); margin: 0; }
+
+        /* PRIORITY ITEM */
+        .priority-item { margin-bottom: 8px; border: none; padding: 8px 0 8px 10px; display: flex; align-items: center;}
+        .priority-num { color: #888; margin-right: 10px; }
+        
+        /* SAVE/STATUS */
+        .footer { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; margin-top: 20px; border-top: 2px solid var(--border-color); padding-top: 15px; }
+        .status-msg { color: #5cb85c; font-size: 12px; font-weight: bold; display: none; }
+        .save-btn {
+            background-color: var(--stv-blue);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 15px;
+            transition: background-color 0.2s;
+        }
+        .save-btn:hover { background-color: #004a73; }
+
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>STV Engineer III | Week 1 Planner</h1>
-        
-        <div class="routine">
-            <h3>Daily Routine</h3>
-            <div class="routine-item"><span>06:30</span> <span>Wake & Hydrate (Gym Goals)</span></div>
-            <div class="routine-item"><span>08:30</span> <span>Arrive at STV Boston Office</span></div>
-            <div class="routine-item"><span>12:00</span> <span>Lunch (Network with Preethi/Team)</span></div>
-            <div class="routine-item"><span>17:00</span> <span>Wrap Up & Daily Wins</span></div>
-            <div class="routine-item"><span>18:30</span> <span>Nature Walk / Recharge</span></div>
+        <div class="header">
+            <h1>Sanaz Borhani | STV First Week Technical Launch</h1>
+            <div class="header-controls">
+                <div class="date"><span>MO</span> TU WE TH FR</div>
+                <div class="mood-selector" id="mood">
+                    <span data-mood="1">😞</span>
+                    <span data-mood="2">😐</span>
+                    <span data-mood="3">😊</span>
+                    <span data-mood="4">😃</span>
+                </div>
+            </div>
         </div>
 
-        <div class="todo-section">
-            <h3>Weekly To-Do List (PhD/PE Focus)</h3>
-            <p><i>Tasks like software setup (Python/HEC-RAS) and project reviews.</i></p>
-            <textarea id="todoText" placeholder="Enter your work tasks here..."></textarea>
+        <div class="col-left">
+            <div class="box" id="schedule">
+                <h3>Schedule</h3>
+                <div id="scheduleContainer">
+                    </div>
+            </div>
+        </div>
+
+        <div class="col-right">
+            <div class="box" id="top-priorities">
+                <h3>Top 3 Priorities (Technical Milestones)</h3>
+                <div class="priority-item"><span class="priority-num">1.</span><input type="text" id="prio1" placeholder="e.g., Finalize HEC-RAS 2D environment setup"></div>
+                <div class="priority-item"><span class="priority-num">2.</span><input type="text" id="prio2" placeholder="e.g., Complete ProjectWise orientation"></div>
+                <div class="priority-item"><span class="priority-num">3.</span><input type="text" id="prio3" placeholder="e.g., Schedule technical 1-on-1 with Preethi"></div>
+            </div>
             
-            <h3>Technical Notes & Meeting Minutes</h3>
-            <textarea id="noteText" placeholder="Notes on MassDOT standards, 2D modeling milestones..."></textarea>
+            <div class="box" id="to-do">
+                <h3>To Do List (PhD/PE Focus)</h3>
+                <textarea id="todoText" placeholder="Enter specific tasks like culvert analyses, ArcGIS data prep..."></textarea>
+            </div>
             
-            <button class="save-btn" onclick="saveData()">Save Changes</button>
-            <div id="statusMsg" class="status">Saved to Local Storage!</div>
+            <div class="box" id="reminders">
+                <h3>Reminders & Agency Compliance</h3>
+                <textarea id="reminderText" placeholder="Notes on MassDOT standards, MBTA protocols..."></textarea>
+            </div>
+
+            <div class="box" id="meetings">
+                <h3>Technical Syncs & HR Meetings</h3>
+                <textarea id="meetingText" placeholder="Note meeting times, technical discussion points..."></textarea>
+            </div>
+        </div>
+
+        <div class="box" id="notes">
+            <h3>Technical Notes & Modeling Milestones</h3>
+            <textarea class="boxtextarea" id="noteText" placeholder="HEC-RAS mesh refinement issues, Python script automation notes..."></textarea>
+        </div>
+        
+        <div class="box" id="gratitude">
+            <h3>I AM GRATEFUL FOR</h3>
+            <textarea class="boxtextarea" id="gratitudeText" placeholder="My PhD journey, my supportive network, the opportunity to shape Boston's infrastructure..."></textarea>
+        </div>
+
+        <div class="footer">
+            <div class="status-msg" id="statusMsg">Boston Dashboard is SYNCED & SECURE! (Local)</div>
+            <button class="save-btn" onclick="saveData()">SAVE CHANGES</button>
         </div>
     </div>
 
     <script>
-        // Load data on start
-        window.onload = function() {
-            document.getElementById('todoText').value = localStorage.getItem('stv_todo') || "";
-            document.getElementById('noteText').value = localStorage.getItem('stv_notes') || "";
-        }
+        // Data Structure for the First Week Routine (Editable)
+        const weeklyRoutine = [
+            { time: "6:30 AM", task: "Wake, Hydrate, Gym Focus (Energy Prep)" },
+            { time: "7:00 AM", task: "Nourish: Cook Fresh Breakfast (Pack Lunch)" },
+            { time: "8:00 AM", task: "Commute / Nature Intro (Reset Mind)" },
+            { time: "8:30 AM", task: "STV Boston Arrival: Check-in with Preethi" },
+            { time: "9:00 AM", task: "Admin & Onboarding (IT/Sys Setup)" },
+            { time: "10:00 AM", task: "Technical Systems Intro: HEC-RAS/ArcGIS Environment" },
+            { time: "12:00 PM", task: "Lunch (Network with Water/Trans Team)" },
+            { time: "1:00 PM", task: "Project 1 Orientation (Review Design Docs)" },
+            { time: "2:00 PM", task: "Project 2 Deep Dive (Model Review)" },
+            { time: "4:30 PM", task: "Wrap Up Daily Wins & Update To-Do" },
+            { time: "6:00 PM", task: "Decompress: Recharge Spirit (Nature Walk)" },
+            { time: "7:00 PM", task: "Cook Fresh Dinner / Knit / Unwind" }
+        ];
 
-        // Save data to browser memory
-        function saveData() {
-            localStorage.setItem('stv_todo', document.getElementById('todoText').value);
-            localStorage.setItem('stv_notes', document.getElementById('noteText').value);
-            
-            const status = document.getElementById('statusMsg');
-            status.style.display = 'block';
-            setTimeout(() => { status.style.display = 'none'; }, 2000);
-        }
-    </script>
-</body>
-</html>
+        // --- POPULATE SCHEDULE ---
+        const scheduleContainer = document.getElementById('scheduleContainer');
+        weeklyRoutine.forEach((entry, index) => {
+            const row = document.createElement('div');
+            row.className = 'schedule-entry';
+            row.innerHTML = `
+                <div class="time-label">${entry.time}</div>
+                <input type="text" class="input-schedule" value="${entry.task}" id="schedule-${index}">
+            `;
+            scheduleContainer.appendChild(row);
+        });
+
+        // --- INTERACTIVE MOOD SELECTOR ---
+        const moodSelector = document.getElementById('mood');
+        moodSelector.addEventListener('click', (e) => {
+            if (e.target.tagName === 'SPAN') {
+                const selectedMood = e.target.getAttribute('data-mood');
+                localStorage.setItem('
