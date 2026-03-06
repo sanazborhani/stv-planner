@@ -162,6 +162,25 @@
         scheduleContainer.appendChild(row);
     });
 
+    async function autoWeather() {
+        try {
+            const locRes = await fetch('https://ipapi.co/json/');
+            const { latitude, longitude, city } = await locRes.json();
+            const wRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&temperature_unit=fahrenheit`);
+            const { current_weather } = await wRes.json();
+            
+            const codeMap = { 0: "☀️", 1: "🌤️", 2: "🌤️", 3: "☁️", 45: "☁️", 61: "🌧️", 80: "🌧️", 71: "❄️" };
+            const emoji = codeMap[current_weather.weathercode] || "☀️";
+            const temp = Math.round(current_weather.temperature);
+            
+            document.querySelectorAll('.weather-selector span').forEach(s => {
+                s.classList.toggle('selected', s.dataset.w === emoji);
+            });
+            const title = document.querySelector('.header h1');
+            title.innerHTML = `${emoji} Daily Planner <span style="font-size:14px; text-transform:none; font-weight:normal; color:#666; vertical-align:middle;">(${city}: ${temp}°F)</span>`;
+        } catch (e) { console.error("Weather automation failed", e); }
+    }
+
     document.getElementById('weather').addEventListener('click', (e) => {
         if(e.target.dataset.w) {
             document.querySelectorAll('.weather-selector span').forEach(s => s.classList.remove('selected'));
@@ -204,6 +223,8 @@
         if(savedWeather) {
             const span = document.querySelector(`[data-w="${savedWeather}"]`);
             if(span) span.classList.add('selected');
+        } else {
+            autoWeather();
         }
     };
 </script>
