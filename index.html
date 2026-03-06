@@ -21,7 +21,7 @@
         /* Header Section */
         .header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 4px solid var(--stv-blue); padding-bottom: 15px; margin-bottom: 25px; }
         .header h1 { margin: 0; color: var(--stv-blue); font-size: 32px; text-transform: uppercase; letter-spacing: 1px; }
-        
+        .date-display { font-weight: bold; color: #4b5563; text-align: right; }
         .weather-selector { font-size: 24px; display: flex; gap: 10px; cursor: pointer; align-items: center; }
         .weather-selector span { opacity: 0.3; transition: 0.2s; }
         .weather-selector span.selected { opacity: 1; transform: scale(1.2); }
@@ -35,7 +35,7 @@
         /* Color Mapping */
         #priorities { background: var(--bg-priorities); }
         #todo { background: var(--bg-todo); }
-        #reminders { background: var(--bg-reminders); }
+        #reminders { background: var(--bg-reminders); grid-column: 1 / -1; } /* Fixed Empty Space */
         #meetings { background: var(--bg-meetings); grid-column: 1 / -1; } /* Fixed Empty Space */
         #gratitude { background: var(--bg-gratitude); }
         #nourish { background: var(--bg-nourish); border: 1px solid #fab005; }
@@ -72,6 +72,10 @@
 <div class="container">
     <div class="header">
         <h1>☀️ Daily Planner</h1>
+        <div class="date-display">
+            <div id="currentDay" style="font-size: 20px;">Friday</div>
+            <div id="currentDate" style="font-size: 14px; color: var(--stv-blue);">March 6, 2026</div>
+        </div>
         <div class="weather-selector" id="weather">
             <span data-w="☀️">☀️</span>
             <span data-w="🌤️">🌤️</span>
@@ -103,7 +107,7 @@
         </div>
 
         <div class="box" id="meetings">
-            <h3>🤝 Technical Syncs & HR Meetings</h3>
+            <h3>🤝 Meetings & Notes </h3>
             <textarea id="val-meetings" oninput="autoExpand(this)" placeholder="Meeting notes and discussion points..."></textarea>
         </div>
 
@@ -194,3 +198,4 @@
 </script>
 </body>
 </html>
+
