@@ -2,52 +2,71 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sanaz | STV Technical Dashboard</title>
     <style>
-        :root { --stv-blue: #005a8b; --accent: #f8f9fa; --border: #d1d5db; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f3f4f6; padding: 20px; color: #1f2937; }
-        .container { max-width: 1050px; margin: auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        :root { 
+            --stv-blue: #005a8b; 
+            --bg-todo: #e8f4f9;      /* Light Blue */
+            --bg-reminders: #e9f7ef;  /* Light Green */
+            --bg-meetings: #fdf2e9;   /* Light Peach */
+            --bg-gratitude: #fef9e7;  /* Light Yellow */
+            --bg-priorities: #fef1f1; /* Light Pink/Red */
+        }
         
-        /* Header */
-        .header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 5px solid var(--stv-blue); padding-bottom: 15px; margin-bottom: 20px; }
-        .header h1 { margin: 0; font-size: 26px; color: var(--stv-blue); }
-        .date-display { font-weight: bold; color: #4b5563; text-align: right; }
-
+        body { font-family: 'SF Pro Display', 'Segoe UI', sans-serif; background: #f0f2f5; padding: 20px; color: #333; }
+        .container { max-width: 1100px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        
+        /* Header & Date Section */
+        .header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 4px solid var(--stv-blue); padding-bottom: 15px; margin-bottom: 25px; }
+        .header h1 { margin: 0; color: var(--stv-blue); font-size: 28px; }
+        .date-badge { text-align: right; font-weight: bold; }
+        
         /* Buttons */
         .btn-group { margin-bottom: 20px; display: flex; gap: 10px; }
-        button { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        button { padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; }
         .save-btn { background: var(--stv-blue); color: white; }
-        .pdf-btn { background: #10b981; color: white; }
-        button:hover { opacity: 0.9; transform: translateY(-1px); }
+        .pdf-btn { background: #28a745; color: white; }
+        button:hover { transform: translateY(-1px); opacity: 0.9; }
 
-        /* Grid Layout */
+        /* Dashboard Grid Structure */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .box { border: 1.5px solid var(--border); border-radius: 12px; padding: 15px; background: white; }
-        .box h3 { margin-top: 0; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: #6b7280; border-bottom: 1px solid #edf2f7; padding-bottom: 8px; }
+        
+        /* Generic Box Styles */
+        .box { border-radius: 10px; padding: 20px; border: 1px solid rgba(0,0,0,0.05); }
+        .box h3 { margin-top: 0; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 10px; margin-bottom: 15px; }
+        
+        /* Color Mapping (From your Reference) */
+        #priorities { background: var(--bg-priorities); }
+        #todo { background: var(--bg-todo); }
+        #reminders { background: var(--bg-reminders); }
+        #meetings { background: var(--bg-meetings); }
+        #gratitude { background: var(--bg-gratitude); }
 
-        /* Editable Areas - NO SCROLLING */
+        /* Inputs & Textareas - Dynamic Expansion for PDF */
         textarea, .schedule-input { 
-            width: 100%; border: none; outline: none; font-family: inherit; font-size: 14px; 
-            padding: 5px; background: transparent; resize: none; overflow: hidden; 
+            width: 100%; border: none; outline: none; font-family: inherit; font-size: 15px; 
+            background: transparent; resize: none; overflow: hidden; display: block;
         }
-        textarea { min-height: 120px; display: block; }
+        textarea { min-height: 140px; }
 
-        /* Schedule Section */
-        .schedule-row { display: flex; align-items: center; border-bottom: 1px solid #f3f4f6; padding: 6px 0; }
-        .time-label { width: 70px; font-weight: bold; font-size: 12px; color: var(--stv-blue); }
+        /* Schedule Section (Left Column) */
+        .schedule-box { grid-row: span 3; background: #fff; border: 1px solid #ddd; }
+        .schedule-row { display: flex; align-items: center; border-bottom: 1px solid #f0f0f0; padding: 8px 0; }
+        .time-label { width: 80px; font-weight: bold; font-size: 13px; color: var(--stv-blue); }
 
-        /* Bottom Sections (Small & Compact) */
-        .footer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; border-top: 2px solid #eee; padding-top: 20px; }
-        .small-box { padding: 10px; border: 1px dashed #cbd5e1; border-radius: 8px; font-size: 13px; }
-        .meal-row { display: flex; gap: 10px; margin-bottom: 5px; }
-        .meal-label { font-weight: bold; width: 50px; color: #856404; }
+        /* Meal Section - Compact and Bottom */
+        .footer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+        .meal-box { background: #fff9db; border: 1px solid #fab005; padding: 15px; border-radius: 10px; }
+        .meal-item { display: flex; align-items: center; margin-bottom: 5px; font-size: 14px; }
+        .meal-item label { font-weight: bold; width: 60px; color: #856404; }
 
-        /* PDF/Print Optimization */
+        /* Print Settings (Crucial for PDF) */
         @media print {
-            .btn-group, .instruction-text { display: none !important; }
+            .btn-group { display: none !important; }
             body { background: white; padding: 0; }
-            .container { box-shadow: none; border: none; width: 100%; }
-            textarea { height: auto !important; } /* Forces text to expand in PDF */
+            .container { box-shadow: none; border: none; width: 100%; max-width: 100%; }
+            textarea { height: auto !important; } 
         }
     </style>
 </head>
@@ -56,74 +75,75 @@
 <div class="container">
     <div class="header">
         <div>
-            <h1>🚀 STV Engineering Launch | Boston Office</h1>
-            <p style="margin: 5px 0 0 0; color: #6b7280;">PhD, PE Professional Dashboard</p>
+            <h1>🌊 STV Engineering | First Week Roadmap</h1>
+            <p style="margin: 5px 0 0 0; color: #555;">PhD, PE | Water Resources Professional</p>
         </div>
-        <div class="date-display">
-            <div id="currentDay" style="font-size: 20px;">Friday</div>
-            <div id="currentDate" style="font-size: 14px; color: var(--stv-blue);">March 6, 2026</div>
+        <div class="date-badge">
+            <div id="dayName" style="font-size: 22px;">Friday</div>
+            <div id="fullDate" style="color: var(--stv-blue);">March 6, 2026</div>
         </div>
     </div>
 
     <div class="btn-group">
-        <button class="save-btn" onclick="saveData()">💾 Save My Data</button>
-        <button class="pdf-btn" onclick="exportPDF()">📄 Generate PDF Report</button>
+        <button class="save-btn" onclick="saveData()">💾 SAVE DATA</button>
+        <button class="pdf-btn" onclick="exportPDF()">📄 EXPORT TO PDF</button>
     </div>
 
     <div class="grid">
-        <div class="box" style="grid-row: span 2;">
-            <h3>📅 Hourly Roadmap</h3>
+        <div class="box schedule-box">
+            <h3>⏰ Full Hourly Schedule</h3>
             <div id="scheduleContainer"></div>
         </div>
 
-        <div class="box" style="background: #fffbeb;">
+        <div class="box" id="priorities">
             <h3>🎯 Top 3 Strategic Priorities</h3>
-            <textarea id="priorities" oninput="autoExpand(this)" placeholder="1. Technical Onboarding with Preethi&#10;2. HEC-RAS/Python Environment Setup&#10;3. ProjectWise Access & Org"></textarea>
+            <textarea id="val-priorities" oninput="autoExpand(this)" placeholder="Focus on HEC-RAS 2D environment..."></textarea>
         </div>
 
-        <div class="box">
-            <h3>📝 Engineering To-Do List</h3>
-            <textarea id="todo" oninput="autoExpand(this)" placeholder="Check culvert ratings...&#10;Update GIS layers...&#10;Review Newton-Weston specs..."></textarea>
+        <div class="box" id="todo">
+            <h3>📝 To Do List (PHD/PE Focus)</h3>
+            <textarea id="val-todo" oninput="autoExpand(this)" placeholder="ArcGIS data prep, culvert analysis..."></textarea>
         </div>
 
-        <div class="box" style="grid-column: span 1;">
-            <h3>🤝 Meeting Notes & Technical Syncs</h3>
-            <textarea id="meetings" oninput="autoExpand(this)" placeholder="Discussion points from technical check-ins..."></textarea>
+        <div class="box" id="reminders">
+            <h3>🛡️ Reminders & Compliance</h3>
+            <textarea id="val-reminders" oninput="autoExpand(this)" placeholder="MassDOT Standards, MBTA protocols..."></textarea>
         </div>
 
-        <div class="box">
-            <h3>🌊 H&H Modeling & Project Notes</h3>
-            <textarea id="projNotes" oninput="autoExpand(this)" placeholder="Mesh refinement notes, Manning's n-value sources..."></textarea>
+        <div class="box" id="meetings">
+            <h3>🤝 Technical Syncs & HR Meetings</h3>
+            <textarea id="val-meetings" oninput="autoExpand(this)" placeholder="Note technical discussion points..."></textarea>
         </div>
     </div>
 
     <div class="footer-grid">
-        <div class="small-box" style="background: #fefce8;">
-            <h4 style="margin: 0 0 8px 0; font-size: 12px; color: #856404;">🍲 MEAL PLAN</h4>
-            <div class="meal-row"><span class="meal-label">B:</span><input type="text" id="mealB" class="schedule-input" placeholder="..."></div>
-            <div class="meal-row"><span class="meal-label">L:</span><input type="text" id="mealL" class="schedule-input" placeholder="..."></div>
-            <div class="meal-row"><span class="meal-label">D:</span><input type="text" id="mealD" class="schedule-input" placeholder="..."></div>
+        <div class="meal-box">
+            <h3 style="margin:0 0 10px 0; font-size: 0.8rem; color: #856404;">🍲 NOURISHMENT PLAN</h3>
+            <div class="meal-item"><label>B-FAST:</label><input type="text" id="mealB" class="schedule-input" placeholder="..."></div>
+            <div class="meal-item"><label>LUNCH:</label><input type="text" id="mealL" class="schedule-input" placeholder="..."></div>
+            <div class="meal-item"><label>DINNER:</label><input type="text" id="mealD" class="schedule-input" placeholder="..."></div>
         </div>
-        <div class="small-box" style="background: #f0fdf4;">
-            <h4 style="margin: 0 0 8px 0; font-size: 12px; color: #166534;">🌿 GRATITUDE & RECHARGE</h4>
-            <textarea id="gratitude" style="min-height: 60px; font-size: 12px;" oninput="autoExpand(this)" placeholder="A productive day, a great walk, the move to Boston..."></textarea>
+        
+        <div class="box" id="gratitude">
+            <h3>🌿 I AM GRATEFUL FOR</h3>
+            <textarea id="val-gratitude" style="min-height: 80px;" oninput="autoExpand(this)" placeholder="My journey to Boston, finishing the PhD..."></textarea>
         </div>
     </div>
 </div>
 
 <script>
-    const hours = ["06:30", "07:30", "08:30", "09:30", "10:30", "12:00", "13:30", "15:00", "17:00", "18:30", "20:00", "21:30"];
+    const times = ["06:30", "07:30", "08:30", "09:30", "10:30", "11:30", "12:00", "13:30", "14:30", "15:30", "17:00", "18:30", "20:00", "21:30"];
     const scheduleContainer = document.getElementById('scheduleContainer');
 
-    // Build Schedule
-    hours.forEach(time => {
+    // Build the Hourly Schedule
+    times.forEach(t => {
         const row = document.createElement('div');
         row.className = 'schedule-row';
-        row.innerHTML = `<div class="time-label">${time}</div><input type="text" id="task-${time}" class="schedule-input" placeholder="...">`;
+        row.innerHTML = `<div class="time-label">${t}</div><input type="text" id="task-${t}" class="schedule-input" placeholder="...">`;
         scheduleContainer.appendChild(row);
     });
 
-    // Auto-expand textarea to prevent scrollbars in PDF
+    // Auto-expansion logic to fix the PDF cut-off issue
     function autoExpand(field) {
         field.style.height = 'inherit';
         field.style.height = field.scrollHeight + 'px';
@@ -131,31 +151,30 @@
 
     function saveData() {
         const data = {
-            priorities: document.getElementById('priorities').value,
-            todo: document.getElementById('todo').value,
-            meetings: document.getElementById('meetings').value,
-            projNotes: document.getElementById('projNotes').value,
+            priorities: document.getElementById('val-priorities').value,
+            todo: document.getElementById('val-todo').value,
+            reminders: document.getElementById('val-reminders').value,
+            meetings: document.getElementById('val-meetings').value,
+            gratitude: document.getElementById('val-gratitude').value,
             mealB: document.getElementById('mealB').value,
             mealL: document.getElementById('mealL').value,
-            mealD: document.getElementById('mealD').value,
-            gratitude: document.getElementById('gratitude').value
+            mealD: document.getElementById('mealD').value
         };
-        hours.forEach(t => data[`task-${t}`] = document.getElementById(`task-${t}`).value);
-        localStorage.setItem('sanaz_final_planner', JSON.stringify(data));
-        alert("Success! Your technical data is saved locally.");
+        times.forEach(t => data[`task-${t}`] = document.getElementById(`task-${t}`).value);
+        localStorage.setItem('sanaz_final_dashboard', JSON.stringify(data));
+        alert("Success! Your Technical Dashboard is Synced Locally.");
     }
 
     function exportPDF() {
-        // Force textareas to expand before printing
         document.querySelectorAll('textarea').forEach(autoExpand);
         window.print();
     }
 
     window.onload = function() {
-        const saved = JSON.parse(localStorage.getItem('sanaz_final_planner'));
+        const saved = JSON.parse(localStorage.getItem('sanaz_final_dashboard'));
         if (saved) {
             Object.keys(saved).forEach(key => {
-                const el = document.getElementById(key);
+                const el = document.getElementById(key.includes('task-') ? key : 'val-' + key) || document.getElementById(key);
                 if (el) {
                     el.value = saved[key];
                     if (el.tagName === 'TEXTAREA') autoExpand(el);
