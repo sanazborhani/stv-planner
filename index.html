@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sanaz's STV First Week Planner</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; color: #333; padding: 20px; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1 { color: #005a8b; border-bottom: 2px solid #005a8b; padding-bottom: 10px; }
+        .routine { margin-bottom: 30px; }
+        .routine-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
+        .todo-section textarea { width: 100%; height: 150px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; }
+        .save-btn { background: #005a8b; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 10px; }
+        .save-btn:hover { background: #004a73; }
+        .status { color: green; font-size: 12px; margin-top: 5px; display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>STV Engineer III | Week 1 Planner</h1>
+        
+        <div class="routine">
+            <h3>Daily Routine</h3>
+            <div class="routine-item"><span>06:30</span> <span>Wake & Hydrate (Gym Goals)</span></div>
+            <div class="routine-item"><span>08:30</span> <span>Arrive at STV Boston Office</span></div>
+            <div class="routine-item"><span>12:00</span> <span>Lunch (Network with Preethi/Team)</span></div>
+            <div class="routine-item"><span>17:00</span> <span>Wrap Up & Daily Wins</span></div>
+            <div class="routine-item"><span>18:30</span> <span>Nature Walk / Recharge</span></div>
+        </div>
+
+        <div class="todo-section">
+            <h3>Weekly To-Do List (PhD/PE Focus)</h3>
+            <p><i>Tasks like software setup (Python/HEC-RAS) and project reviews.</i></p>
+            <textarea id="todoText" placeholder="Enter your work tasks here..."></textarea>
+            
+            <h3>Technical Notes & Meeting Minutes</h3>
+            <textarea id="noteText" placeholder="Notes on MassDOT standards, 2D modeling milestones..."></textarea>
+            
+            <button class="save-btn" onclick="saveData()">Save Changes</button>
+            <div id="statusMsg" class="status">Saved to Local Storage!</div>
+        </div>
+    </div>
+
+    <script>
+        // Load data on start
+        window.onload = function() {
+            document.getElementById('todoText').value = localStorage.getItem('stv_todo') || "";
+            document.getElementById('noteText').value = localStorage.getItem('stv_notes') || "";
+        }
+
+        // Save data to browser memory
+        function saveData() {
+            localStorage.setItem('stv_todo', document.getElementById('todoText').value);
+            localStorage.setItem('stv_notes', document.getElementById('noteText').value);
+            
+            const status = document.getElementById('statusMsg');
+            status.style.display = 'block';
+            setTimeout(() => { status.style.display = 'none'; }, 2000);
+        }
+    </script>
+</body>
+</html>
