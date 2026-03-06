@@ -2,222 +2,156 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sanaz's STV First Week | Technical Dashboard</title>
+    <title>Sanaz | STV Professional & Personal Planner</title>
     <style>
-        /* BASE STYLES */
-        :root {
-            --stv-blue: #005a8b; /* STV Corporate Blue */
-            --light-blue: #e8f4f9;
-            --green: #e9f7ef;
-            --yellow: #fef9e7;
-            --orange: #fdf2e9;
-            --gray: #f2f2f2;
-            --border-color: #ddd;
-        }
-        body {
-            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f7f9fc;
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
-            color: #333;
-        }
-        .container {
-            max-width: 1200px;
-            margin: auto;
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        /* HEADER */
-        .header {
-            grid-column: 1 / -1;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid var(--stv-blue);
-            padding-bottom: 15px;
-            margin-bottom: 10px;
-        }
-        .header h1 { margin: 0; color: var(--stv-blue); font-weight: 700; font-size: 28px; }
-        .header-controls { display: flex; gap: 10px; align-items: center; }
-        .date { border: 1px solid var(--border-color); padding: 5px 15px; border-radius: 6px; }
-        .mood-selector span { cursor: pointer; font-size: 1.2rem; margin: 0 3px; opacity: 0.5; }
-        .mood-selector span.selected { opacity: 1; text-shadow: 0 0 5px rgba(0,0,0,0.2); }
-
-        /* COMMON BOX STYLES */
-        .box {
-            background: white;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 15px;
-        }
-        .box h3 { margin: 0 0 12px 0; color: #555; font-weight: 600; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        :root { --stv-blue: #005a8b; --header-bg: #eef2f7; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; padding: 20px; }
+        .container { max-width: 1100px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
         
-        /* THE 'SCHEDULE' AND 'TODO' COLUMNS */
-        .col-left { display: grid; grid-template-rows: auto auto auto; gap: 20px; }
-        .col-right { display: grid; grid-template-rows: auto auto auto auto; gap: 20px; }
+        /* Header and Buttons */
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid var(--stv-blue); padding-bottom: 15px; margin-bottom: 25px; }
+        .header h2 { margin: 0; color: var(--stv-blue); letter-spacing: 1px; }
+        .btn-group { display: flex; gap: 10px; }
+        button { padding: 12px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .save-btn { background: var(--stv-blue); color: white; }
+        .pdf-btn { background: #28a745; color: white; }
+        button:hover { opacity: 0.8; }
 
-        /* SPECIFIC BOXES */
-        #schedule { background: white; grid-row: 1 / 4; }
-        #top-priorities { background: var(--orange); }
-        #to-do { background: var(--light-blue); }
-        #reminders { background: var(--green); }
-        #meetings { background: var(--orange); }
-        #notes { background: var(--gray); grid-column: 1 / 2; }
-        #gratitude { background: var(--yellow); grid-column: 2 / 3; }
-
-        /* INPUTS AND TEXTAREAS */
-        textarea, .priority-item {
-            width: 100%;
-            border: 1px solid rgba(0,0,0,0.1);
-            border-radius: 6px;
-            padding: 10px;
-            font-family: inherit;
-            font-size: 14px;
-            resize: none;
-            box-sizing: border-box;
-            background: rgba(255,255,255,0.8);
-        }
-        textarea { height: 120px; margin-bottom: 10px; }
-        .boxtextarea { height: 100%; }
-
-        /* SCHEDULE & TODO INTERACTIVE ELEMENTS */
-        .schedule-entry, .todo-item {
-            display: grid;
-            grid-template-columns: 80px 1fr;
-            align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-        }
-        .time-label { font-size: 12px; color: #777; font-weight: bold; }
-        .todo-item { grid-template-columns: auto 1fr; gap: 10px; }
-        .input-schedule, .input-todo { border: none; background: transparent; padding: 0; font-family: inherit; font-size: 14px; }
-        .todo-item input[type="checkbox"] { transform: scale(1.1); margin: 0; }
-
-        /* PRIORITY ITEM */
-        .priority-item { margin-bottom: 8px; border: none; padding: 8px 0 8px 10px; display: flex; align-items: center;}
-        .priority-num { color: #888; margin-right: 10px; }
+        /* Grid Layout */
+        .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+        .box { border: 1px solid #dee2e6; border-radius: 10px; padding: 18px; background: #fff; display: flex; flex-direction: column; }
+        .box h3 { margin-top: 0; color: #495057; font-size: 0.9rem; text-transform: uppercase; border-bottom: 2px solid #f1f3f5; padding-bottom: 8px; margin-bottom: 15px; }
         
-        /* SAVE/STATUS */
-        .footer { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; margin-top: 20px; border-top: 2px solid var(--border-color); padding-top: 15px; }
-        .status-msg { color: #5cb85c; font-size: 12px; font-weight: bold; display: none; }
-        .save-btn {
-            background-color: var(--stv-blue);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 15px;
-            transition: background-color 0.2s;
-        }
-        .save-btn:hover { background-color: #004a73; }
+        /* Schedule Table */
+        .schedule-table { width: 100%; border-collapse: collapse; }
+        .schedule-row { border-bottom: 1px solid #f1f3f5; }
+        .time-col { width: 80px; font-weight: bold; font-size: 13px; color: var(--stv-blue); padding: 8px 0; }
+        .input-cell input { width: 100%; border: none; outline: none; font-size: 14px; padding: 5px; background: transparent; }
 
+        /* Textareas */
+        textarea { width: 100%; border: none; font-family: inherit; font-size: 14px; resize: none; min-height: 80px; outline: none; background: #fafafa; border-radius: 5px; padding: 5px; }
+
+        /* Meal Section Specifics */
+        .meal-box { background: #fff9db; border-color: #fab005; }
+        .meal-item { margin-bottom: 10px; }
+        .meal-label { font-weight: bold; font-size: 12px; color: #856404; display: block; }
+
+        /* Print Optimization */
+        @media print {
+            .btn-group, .instructions { display: none !important; }
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; border: none; width: 100%; max-width: 100%; }
+            .box { break-inside: avoid; }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Sanaz Borhani | STV First Week Technical Launch</h1>
-            <div class="header-controls">
-                <div class="date"><span>MO</span> TU WE TH FR</div>
-                <div class="mood-selector" id="mood">
-                    <span data-mood="1">😞</span>
-                    <span data-mood="2">😐</span>
-                    <span data-mood="3">😊</span>
-                    <span data-mood="4">😃</span>
-                </div>
-            </div>
-        </div>
 
-        <div class="col-left">
-            <div class="box" id="schedule">
-                <h3>Schedule</h3>
-                <div id="scheduleContainer">
-                    </div>
-            </div>
-        </div>
-
-        <div class="col-right">
-            <div class="box" id="top-priorities">
-                <h3>Top 3 Priorities (Technical Milestones)</h3>
-                <div class="priority-item"><span class="priority-num">1.</span><input type="text" id="prio1" placeholder="e.g., Finalize HEC-RAS 2D environment setup"></div>
-                <div class="priority-item"><span class="priority-num">2.</span><input type="text" id="prio2" placeholder="e.g., Complete ProjectWise orientation"></div>
-                <div class="priority-item"><span class="priority-num">3.</span><input type="text" id="prio3" placeholder="e.g., Schedule technical 1-on-1 with Preethi"></div>
-            </div>
-            
-            <div class="box" id="to-do">
-                <h3>To Do List (PhD/PE Focus)</h3>
-                <textarea id="todoText" placeholder="Enter specific tasks like culvert analyses, ArcGIS data prep..."></textarea>
-            </div>
-            
-            <div class="box" id="reminders">
-                <h3>Reminders & Agency Compliance</h3>
-                <textarea id="reminderText" placeholder="Notes on MassDOT standards, MBTA protocols..."></textarea>
-            </div>
-
-            <div class="box" id="meetings">
-                <h3>Technical Syncs & HR Meetings</h3>
-                <textarea id="meetingText" placeholder="Note meeting times, technical discussion points..."></textarea>
-            </div>
-        </div>
-
-        <div class="box" id="notes">
-            <h3>Technical Notes & Modeling Milestones</h3>
-            <textarea class="boxtextarea" id="noteText" placeholder="HEC-RAS mesh refinement issues, Python script automation notes..."></textarea>
-        </div>
-        
-        <div class="box" id="gratitude">
-            <h3>I AM GRATEFUL FOR</h3>
-            <textarea class="boxtextarea" id="gratitudeText" placeholder="My PhD journey, my supportive network, the opportunity to shape Boston's infrastructure..."></textarea>
-        </div>
-
-        <div class="footer">
-            <div class="status-msg" id="statusMsg">Boston Dashboard is SYNCED & SECURE! (Local)</div>
-            <button class="save-btn" onclick="saveData()">SAVE CHANGES</button>
+<div class="container">
+    <div class="header">
+        <h2>STV FIRST WEEK | ENGINEER III DASHBOARD</h2>
+        <div class="btn-group">
+            <button class="save-btn" onclick="saveData()">💾 SAVE DATA</button>
+            <button class="pdf-btn" onclick="window.print()">📄 EXPORT TO PDF</button>
         </div>
     </div>
 
-    <script>
-        // Data Structure for the First Week Routine (Editable)
-        const weeklyRoutine = [
-            { time: "6:30 AM", task: "Wake, Hydrate, Gym Focus (Energy Prep)" },
-            { time: "7:00 AM", task: "Nourish: Cook Fresh Breakfast (Pack Lunch)" },
-            { time: "8:00 AM", task: "Commute / Nature Intro (Reset Mind)" },
-            { time: "8:30 AM", task: "STV Boston Arrival: Check-in with Preethi" },
-            { time: "9:00 AM", task: "Admin & Onboarding (IT/Sys Setup)" },
-            { time: "10:00 AM", task: "Technical Systems Intro: HEC-RAS/ArcGIS Environment" },
-            { time: "12:00 PM", task: "Lunch (Network with Water/Trans Team)" },
-            { time: "1:00 PM", task: "Project 1 Orientation (Review Design Docs)" },
-            { time: "2:00 PM", task: "Project 2 Deep Dive (Model Review)" },
-            { time: "4:30 PM", task: "Wrap Up Daily Wins & Update To-Do" },
-            { time: "6:00 PM", task: "Decompress: Recharge Spirit (Nature Walk)" },
-            { time: "7:00 PM", task: "Cook Fresh Dinner / Knit / Unwind" }
-        ];
+    <div class="main-grid">
+        <div class="box" style="grid-row: span 2;">
+            <h3>Full Hourly Schedule</h3>
+            <div id="scheduleContainer"></div>
+        </div>
 
-        // --- POPULATE SCHEDULE ---
-        const scheduleContainer = document.getElementById('scheduleContainer');
-        weeklyRoutine.forEach((entry, index) => {
-            const row = document.createElement('div');
-            row.className = 'schedule-entry';
-            row.innerHTML = `
-                <div class="time-label">${entry.time}</div>
-                <input type="text" class="input-schedule" value="${entry.task}" id="schedule-${index}">
-            `;
-            scheduleContainer.appendChild(row);
-        });
+        <div class="box">
+            <h3>Top 3 Technical Priorities</h3>
+            <textarea id="priorities" placeholder="1. Set up HEC-RAS/Python Env&#10;2. ProjectWise access&#10;3. Meet Preethi Sreeraj"></textarea>
+        </div>
 
-        // --- INTERACTIVE MOOD SELECTOR ---
-        const moodSelector = document.getElementById('mood');
-        moodSelector.addEventListener('click', (e) => {
-            if (e.target.tagName === 'SPAN') {
-                const selectedMood = e.target.getAttribute('data-mood');
-                localStorage.setItem('
+        <div class="box meal-box">
+            <h3>Nourishment & Meal Plan</h3>
+            <div class="meal-item">
+                <span class="meal-label">Breakfast</span>
+                <input type="text" id="breakfast" style="width:100%; border:none; background:transparent;" placeholder="e.g., High protein eggs & toast">
+            </div>
+            <div class="meal-item">
+                <span class="meal-label">Lunch (Networking)</span>
+                <input type="text" id="lunch" style="width:100%; border:none; background:transparent;" placeholder="e.g., Salad with team at office">
+            </div>
+            <div class="meal-item">
+                <span class="meal-label">Dinner (Kitchen Therapy)</span>
+                <input type="text" id="dinner" style="width:100%; border:none; background:transparent;" placeholder="e.g., Batch cook for Wednesday">
+            </div>
+        </div>
+
+        <div class="box">
+            <h3>Meetings & Technical Syncs</h3>
+            <textarea id="meetings" style="min-height: 120px;" placeholder="Newton-Weston Bridge Bundle details..."></textarea>
+        </div>
+
+        <div class="box" style="background: #e7f5ff;">
+            <h3>I Am Grateful For / Spirit Recharge</h3>
+            <textarea id="gratitude" style="background: transparent;" placeholder="Hiking trails, finished PhD, new role at STV..."></textarea>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Expanded hours for a full professional and personal day
+    const hours = [
+        "06:30", "07:00", "07:30", "08:00", "08:30", "09:00", "10:00", 
+        "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", 
+        "18:00", "19:00", "20:00", "21:30"
+    ];
+    
+    const scheduleContainer = document.getElementById('scheduleContainer');
+
+    // Build the hourly table
+    hours.forEach(time => {
+        const row = document.createElement('div');
+        row.className = 'schedule-row';
+        row.style.display = 'flex';
+        row.style.alignItems = 'center';
+        row.innerHTML = `
+            <div class="time-col">${time}</div>
+            <div class="input-cell" style="flex-grow:1;">
+                <input type="text" id="task-${time}" placeholder="...">
+            </div>
+        `;
+        scheduleContainer.appendChild(row);
+    });
+
+    // Save functionality using LocalStorage
+    function saveData() {
+        const data = {
+            priorities: document.getElementById('priorities').value,
+            breakfast: document.getElementById('breakfast').value,
+            lunch: document.getElementById('lunch').value,
+            dinner: document.getElementById('dinner').value,
+            meetings: document.getElementById('meetings').value,
+            gratitude: document.getElementById('gratitude').value
+        };
+        hours.forEach(t => data[`task-${t}`] = document.getElementById(`task-${t}`).value);
+        
+        localStorage.setItem('stv_planner_v2', JSON.stringify(data));
+        alert("Planner data saved locally! Click 'Export to PDF' to save your file.");
+    }
+
+    // Load data on refresh
+    window.onload = function() {
+        const saved = JSON.parse(localStorage.getItem('stv_planner_v2'));
+        if (saved) {
+            document.getElementById('priorities').value = saved.priorities || "";
+            document.getElementById('breakfast').value = saved.breakfast || "";
+            document.getElementById('lunch').value = saved.lunch || "";
+            document.getElementById('dinner').value = saved.dinner || "";
+            document.getElementById('meetings').value = saved.meetings || "";
+            document.getElementById('gratitude').value = saved.gratitude || "";
+            hours.forEach(t => {
+                const input = document.getElementById(`task-${t}`);
+                if(input) input.value = saved[`task-${t}`] || "";
+            });
+        }
+    };
+</script>
+</body>
+</html>
